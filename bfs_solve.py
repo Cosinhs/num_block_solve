@@ -1,9 +1,9 @@
-#75
-puzzle = ((('⭐', '∞', '', '/10c'),
-           ('=1011', 11, '', '*10c'),
-           ('', '', '', '*10c'),
-           ('+1c', '+1c', '', '*10c')),
-          (1, 1))
+#46
+puzzle = ((('⭐', 66, 84, 20, 35),
+           ('∞', '∞', '∞', '∞', ''),
+           (10, '', '', '', ''),
+           ('o', 'o', '←s', '←s', '+2s')),
+          (2, 0))
 
 puzzle = list(puzzle)
 puzzle.append(False)
@@ -72,6 +72,20 @@ def walk(cur_pos, direct, board, shield):
 
     if type(o) is int:
         if type(b[x][y]) is int:
+            b[d[0]][d[1]] = b[x][y]
+            b[x][y] = ''
+        else:
+            b[x][y], b[d[0]][d[1]] = b[x][y].split('_')
+            b[d[0]][d[1]] = int(b[d[0]][d[1]])
+        if shield:
+            shield = False
+        else:
+            b[d[0]][d[1]] = b[d[0]][d[1]] - o
+            if b[d[0]][d[1]] <= 0:
+                return board, (x, y), shield
+        return tuple(map(tuple, b)), d, shield
+        '''
+        if type(b[x][y]) is int:
             if shield:
                 b[d[0]][d[1]] = b[x][y]
                 shield = False
@@ -90,7 +104,8 @@ def walk(cur_pos, direct, board, shield):
                 shield = False
             b[x][y] = b[x][y].split('_')[0]
         return tuple(map(tuple, b)), d, shield
-    
+        '''
+        
     if o[-1] == 'c' and o[0] != '←':
         if type(b[x][y]) is int:
             b[d[0]][d[1]] = b[x][y]
@@ -248,8 +263,7 @@ def bfs():
                     if found:
                         print(all_pos[t])
                         return
-        step[-2].clear()
-        
+        step[-2].clear() 
     print("not found")
 
 bfs()
