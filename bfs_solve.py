@@ -84,27 +84,6 @@ def walk(cur_pos, direct, board, shield):
             if b[d[0]][d[1]] <= 0:
                 return board, (x, y), shield
         return tuple(map(tuple, b)), d, shield
-        '''
-        if type(b[x][y]) is int:
-            if shield:
-                b[d[0]][d[1]] = b[x][y]
-                shield = False
-            else:
-                b[d[0]][d[1]] = b[x][y] - o
-                if b[d[0]][d[1]] <= 0:
-                    return board, (x, y), shield
-            b[x][y] = ''
-        else:
-            b[d[0]][d[1]] = int(b[x][y].split('_')[1])
-            if not shield:
-                b[d[0]][d[1]] = b[d[0]][d[1]] - o
-                if b[d[0]][d[1]] <= 0:
-                    return board, (x, y), shield
-            else:
-                shield = False
-            b[x][y] = b[x][y].split('_')[0]
-        return tuple(map(tuple, b)), d, shield
-        '''
         
     if o[-1] == 'c' and o[0] != '←':
         if type(b[x][y]) is int:
