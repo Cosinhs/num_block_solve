@@ -6,9 +6,7 @@ puzzle = ((('⭐', '∞', '-3s', '∞', '+3c', '∞', '+5c'),
            ('/2s', '∞', '*2c', '∞', '-2s', '∞', 25)),
           (4, 6))
 
-puzzle = list(puzzle)
-puzzle.append(False)
-puzzle = tuple(puzzle)
+puzzle += (False, )
 
 m = len(puzzle[0])
 n = len(puzzle[0][0])
