@@ -1,9 +1,10 @@
-#46
-puzzle = ((('⭐', 66, 84, 20, 35),
-           ('∞', '∞', '∞', '∞', ''),
-           (10, '', '', '', ''),
-           ('o', 'o', '←s', '←s', '+2s')),
-          (2, 0))
+##5
+puzzle = ((('⭐', '∞', '-3s', '∞', '+3c', '∞', '+5c'),
+           (70, '∞', 5, '∞', 5, '∞', 8),
+           ('', '', '', '', '', '', ''),
+           (11, '∞', 1, '∞', 2, '∞', 6),
+           ('/2s', '∞', '*2c', '∞', '-2s', '∞', 25)),
+          (4, 6))
 
 puzzle = list(puzzle)
 puzzle.append(False)
@@ -156,61 +157,26 @@ def walk(cur_pos, direct, board, shield):
                     b[i][j] = int(str(b[i][j])[::-1])
         return tuple(map(tuple, b)), d, shield
         
-    if o[0] == '>':
+    if o[0] in ['>', '<', '=', '≠']:
         if type(b[x][y]) is int:
             b[d[0]][d[1]] = b[x][y]
             b[x][y] = ''
         else:
             b[d[0]][d[1]] = int(b[x][y].split('_')[1])
             b[x][y] = b[x][y].split('_')[0]
-        if b[d[0]][d[1]] > int(o[1:]):
-            b[d[0]][d[1]] = f'{o}_{b[d[0]][d[1]]}'
-            b[x][y] = b[x][y].split('_')[0]
-            return tuple(map(tuple, b)), d, shield
-        else:
-            return board, (x, y), shield
-        
-    if o[0] == '<':
-        if type(b[x][y]) is int:
-            b[d[0]][d[1]] = b[x][y]
-            b[x][y] = ''
-        else:
-            b[d[0]][d[1]] = int(b[x][y].split('_')[1])
-            b[x][y] = b[x][y].split('_')[0]
-        if b[d[0]][d[1]] < int(o[1:]):
-            b[d[0]][d[1]] = f'{o}_{b[d[0]][d[1]]}'
-            b[x][y] = b[x][y].split('_')[0]
-            return tuple(map(tuple, b)), d, shield
-        else:
-            return board, (x, y), shield
             
-    if o[0] == '=':
-        if type(b[x][y]) is int:
-            b[d[0]][d[1]] = b[x][y]
-            b[x][y] = ''
-        else:
-            b[d[0]][d[1]] = int(b[x][y].split('_')[1])
-            b[x][y] = b[x][y].split('_')[0]
-        if b[d[0]][d[1]] == int(o[1:]):
+        if o[0] == '>' and b[d[0]][d[1]] > int(o[1:]) or\
+           o[0] == '<' and b[d[0]][d[1]] < int(o[1:]) or\
+           o[0] == '=' and b[d[0]][d[1]] == int(o[1:]) or\
+           o[0] == '≠' and b[d[0]][d[1]] != int(o[1:]):
             b[d[0]][d[1]] = f'{o}_{b[d[0]][d[1]]}'
             b[x][y] = b[x][y].split('_')[0]
             return tuple(map(tuple, b)), d, shield
         else:
             return board, (x, y), shield
 
-    if o[0] == '≠':
-        if type(b[x][y]) is int:
-            b[d[0]][d[1]] = b[x][y]
-            b[x][y] = ''
-        else:
-            b[d[0]][d[1]] = int(b[x][y].split('_')[1])
-            b[x][y] = b[x][y].split('_')[0]
-        if b[d[0]][d[1]] != int(o[1:]):
-            b[d[0]][d[1]] = f'{o}_{b[d[0]][d[1]]}'
-            b[x][y] = b[x][y].split('_')[0]
-            return tuple(map(tuple, b)), d, shield
-        else:
-            return board, (x, y), shield
+    else:
+        raise Exception("illegal symbol")
       
     
 def l(cur_pos, board, shield):
@@ -245,4 +211,7 @@ def bfs():
         step[-2].clear() 
     print("not found")
 
+import time
+start_time = time.time()
 bfs()
+print(time.time() - start_time)
