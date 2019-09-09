@@ -1,12 +1,10 @@
-import sys
-import rapidjson
-
-##23
-puzzle = ((('⭐', '∞', '', '/10c', '/10c'),
-           ('=113', 1, '', '*10c', '*10c'),
-           ('', '', '', '*3c', '*3c'),
-           ('*3c', '+1c', '+4c', '', '*4c')),
-          (1, 1))
+##6
+puzzle = ((('⭐', 65, '-3c', '+6c', '-8s'),
+           (60, '+3s', '/2s', '+5s', '-6c'),
+           ('*2s', '*2c', '+2s', '-7c', '*2s'),
+           ('+2c', '-1c', '/2c', '-3s', '-2c'),
+           ('+4s', '-5s', '-5c', '+2c', 10)),
+          (4, 4))
 
 m = len(puzzle[0])
 n = len(puzzle[0][0])
@@ -27,6 +25,8 @@ def div(a, b):
         return s + 1
     else:
         return s
+
+import rapidjson
 
 def walk(board, direct):
     global found
@@ -54,7 +54,7 @@ def walk(board, direct):
             b[x][y], b[d[0]][d[1]] = b[x][y].split("_")
             b[d[0]][d[1]] = int(b[d[0]][d[1]])
         print(b[d[0]][d[1]], len(step) - 1)
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
     
     if o == "":
         if type(b[x][y]) is int:
@@ -63,7 +63,7 @@ def walk(board, direct):
         else:
             b[x][y], b[d[0]][d[1]] = b[x][y].split("_")
             b[d[0]][d[1]] = int(b[d[0]][d[1]])
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
     
     if o == "o":
         if type(b[x][y]) is int:
@@ -73,7 +73,7 @@ def walk(board, direct):
             b[x][y], b[d[0]][d[1]] = b[x][y].split("_")
             b[d[0]][d[1]] = int(b[d[0]][d[1]])
         shield = True
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
 
     if type(o) is int:
         if type(b[x][y]) is int:
@@ -88,7 +88,7 @@ def walk(board, direct):
             b[d[0]][d[1]] = b[d[0]][d[1]] - o
             if b[d[0]][d[1]] <= 0:
                 return None
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
         
     if o[-1] == "c" and o[0] != "←":
         if type(b[x][y]) is int:
@@ -111,7 +111,7 @@ def walk(board, direct):
             b[d[0]][d[1]] = int(o[:-2]) - b[d[0]][d[1]]
         if b[d[0]][d[1]] <= 0:
             return None
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
     
     if o[-1] == "s" and o[0] != "←":
         if type(b[x][y]) is int:
@@ -139,7 +139,7 @@ def walk(board, direct):
                         b[i][j] = int(o[:-2]) - b[i][j]
                         if b[i][j] < 0:
                             b[i][j] = 0
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
 
     if o == "←c":
         if type(b[x][y]) is int:
@@ -148,7 +148,7 @@ def walk(board, direct):
         else:
             b[d[0]][d[1]] = int(b[x][y].split("_")[1][::-1])
             b[x][y] = b[x][y].split("_")[0]
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
 
     if o == "←s":
         if type(b[x][y]) is int:
@@ -161,7 +161,7 @@ def walk(board, direct):
             for j in range(n):
                 if (i, j) != d and type(b[i][j]) is int:
                     b[i][j] = int(str(b[i][j])[::-1])
-        return sys.intern(rapidjson.dumps([b, d, shield]))
+        return rapidjson.dumps([b, d, shield])
         
     if o[0] in [">", "<", "=", "≠"]:
         if type(b[x][y]) is int:
@@ -177,7 +177,7 @@ def walk(board, direct):
            o[0] == "≠" and b[d[0]][d[1]] != int(o[1:]):
             b[d[0]][d[1]] = f"{o}_{b[d[0]][d[1]]}"
             b[x][y] = b[x][y].split("_")[0]
-            return sys.intern(rapidjson.dumps([b, d, shield]))
+            return rapidjson.dumps([b, d, shield])
         else:
             return None
 
@@ -211,7 +211,7 @@ def bfs():
                 if t is None:
                     continue
                 if t not in all_pos:
-                    all_pos[t] = sys.intern(all_pos[p] + direct_alias[f])
+                    all_pos[t] = all_pos[p] + direct_alias[f]
                     step[-1].add(t)
                     if found:
                         print(list(all_pos[t]))
