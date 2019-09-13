@@ -20,7 +20,7 @@ all_pos = {puzzle: ""}
 found = False
 
 def div(a, b):
-    s, r = a//b, a%b
+    s, r = divmod(a, b)
     if r*2 >= b:
         return s + 1
     else:
