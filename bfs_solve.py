@@ -1,6 +1,5 @@
 try:
-    import rapidjson
-    json = rapidjson
+    import rapidjson as json
 except ImportError:
     import json
 
