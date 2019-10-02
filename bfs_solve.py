@@ -1,3 +1,9 @@
+try:
+    import rapidjson
+    json = rapidjson
+except ImportError:
+    import json
+
 ##6
 puzzle = ((('⭐', 65, '-3c', '+6c', '-8s'),
            (60, '+3s', '/2s', '+5s', '-6c'),
@@ -10,12 +16,12 @@ m = len(puzzle[0])
 n = len(puzzle[0][0])
 
 puzzle += (False, )
-puzzle = rapidjson.dumps(puzzle)
+puzzle = json.dumps(puzzle)
 
 step = [set()]
 step[0].add(puzzle)
 
-all_pos = {puzzle: ""}
+all_pos = {puzzle: []}
 
 found = False
 
@@ -26,12 +32,10 @@ def div(a, b):
     else:
         return s
 
-import rapidjson
-
 def walk(board, direct):
     global found
     
-    board = rapidjson.loads(board)
+    board = json.loads(board)
     b = board[0]
     x, y = board[1]
     shield = board[2]
@@ -54,7 +58,7 @@ def walk(board, direct):
             b[x][y], b[d[0]][d[1]] = b[x][y].split("_")
             b[d[0]][d[1]] = int(b[d[0]][d[1]])
         print(b[d[0]][d[1]], len(step) - 1)
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
     
     if o == "":
         if type(b[x][y]) is int:
@@ -63,7 +67,7 @@ def walk(board, direct):
         else:
             b[x][y], b[d[0]][d[1]] = b[x][y].split("_")
             b[d[0]][d[1]] = int(b[d[0]][d[1]])
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
     
     if o == "o":
         if type(b[x][y]) is int:
@@ -73,7 +77,7 @@ def walk(board, direct):
             b[x][y], b[d[0]][d[1]] = b[x][y].split("_")
             b[d[0]][d[1]] = int(b[d[0]][d[1]])
         shield = True
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
 
     if type(o) is int:
         if type(b[x][y]) is int:
@@ -88,7 +92,7 @@ def walk(board, direct):
             b[d[0]][d[1]] = b[d[0]][d[1]] - o
             if b[d[0]][d[1]] <= 0:
                 return None
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
         
     if o[-1] == "c" and o[0] != "←":
         if type(b[x][y]) is int:
@@ -111,7 +115,7 @@ def walk(board, direct):
             b[d[0]][d[1]] = int(o[:-2]) - b[d[0]][d[1]]
         if b[d[0]][d[1]] <= 0:
             return None
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
     
     if o[-1] == "s" and o[0] != "←":
         if type(b[x][y]) is int:
@@ -139,7 +143,7 @@ def walk(board, direct):
                         b[i][j] = int(o[:-2]) - b[i][j]
                         if b[i][j] < 0:
                             b[i][j] = 0
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
 
     if o == "←c":
         if type(b[x][y]) is int:
@@ -148,7 +152,7 @@ def walk(board, direct):
         else:
             b[d[0]][d[1]] = int(b[x][y].split("_")[1][::-1])
             b[x][y] = b[x][y].split("_")[0]
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
 
     if o == "←s":
         if type(b[x][y]) is int:
@@ -161,7 +165,7 @@ def walk(board, direct):
             for j in range(n):
                 if (i, j) != d and type(b[i][j]) is int:
                     b[i][j] = int(str(b[i][j])[::-1])
-        return rapidjson.dumps([b, d, shield])
+        return json.dumps([b, d, shield])
         
     if o[0] in [">", "<", "=", "≠"]:
         if type(b[x][y]) is int:
@@ -177,7 +181,7 @@ def walk(board, direct):
            o[0] == "≠" and b[d[0]][d[1]] != int(o[1:]):
             b[d[0]][d[1]] = f"{o}_{b[d[0]][d[1]]}"
             b[x][y] = b[x][y].split("_")[0]
-            return rapidjson.dumps([b, d, shield])
+            return json.dumps([b, d, shield])
         else:
             return None
 
@@ -211,12 +215,13 @@ def bfs():
                 if t is None:
                     continue
                 if t not in all_pos:
-                    all_pos[t] = all_pos[p] + direct_alias[f]
+                    all_pos[t] = all_pos[p] + [direct_alias[f]]
                     step[-1].add(t)
                     if found:
-                        print(list(all_pos[t]))
+                        print(all_pos[t])
                         return
-        step[-2].clear() 
+            all_pos[p].clear()
+        step[-2].clear()
     print("not found")
 
 import time
